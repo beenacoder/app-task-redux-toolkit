@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../features/tasks/tasksSlice";
 import { v4 as uuid } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
-import TaskList from "./TaskList";
 
 
 const TaskForm = () => {
@@ -12,10 +11,13 @@ const TaskForm = () => {
     description: ''
   })
 
-  const taskEdit = useSelector(state => state.task)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = useParams();
+
+  const taskEdit = useSelector((state) => state.tasks)
+
+  console.log(taskEdit);
 
   const handleChange = (e) => {
     setTask({
@@ -34,13 +36,16 @@ const TaskForm = () => {
   }
 
   useEffect(() => {
-    console.log(params)
+    if(params.id){
+      setTask(taskEdit.find(task => task.id === params.id));
+    }
+    
   }, [])
 
   return (
     <form onSubmit={handleSubmit}>
-      <input name="title" type="text" placeholder="tarea..." onChange={handleChange} />
-      <textarea name="description" placeholder="Descripción de la tarea..." onChange={handleChange}></textarea>
+      <input name="title" type="text" placeholder="Titulo..." onChange={handleChange} value={task.title} />
+      <textarea name="description" placeholder="Descripción de la tarea..." onChange={handleChange} value={task.description}></textarea>
       <button>Crear tarea</button>
     </form>
   )
