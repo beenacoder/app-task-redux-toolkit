@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTask } from "../features/tasks/tasksSlice";
+import { addTask, editTask } from "../features/tasks/tasksSlice";
 import { v4 as uuid } from "uuid";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -17,8 +17,6 @@ const TaskForm = () => {
 
   const taskEdit = useSelector((state) => state.tasks)
 
-  console.log(taskEdit);
-
   const handleChange = (e) => {
     setTask({
       ...task,
@@ -28,10 +26,15 @@ const TaskForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(addTask({
-      ...task,
-      id: uuid()
-    }));
+
+    if(params.id){
+      dispatch(editTask(task))
+    } else {
+      dispatch(addTask({
+        ...task,
+        id: uuid()
+      }));
+    }
     navigate("/");
   }
 
